@@ -1,6 +1,7 @@
 package usecase;
 
-public interface UserAuthenticateUseCase {
+import core.exception.AuthenticateException;
 
-    Boolean authenticate(String username, String password);
+public interface UserAuthenticateUseCase {
+    Boolean authenticate(String username, String password) throws AuthenticateException;
 }

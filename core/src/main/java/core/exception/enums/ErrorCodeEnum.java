@@ -16,7 +16,8 @@ public enum ErrorCodeEnum {
     TR0004("Transferencia não autorizada", "TR-0004"),
     TRP0001("PIN inválido", "TRP-0001"),
     WA0001("Carteira não encontrada", "WA-0001"),
-    NO0001("Houve um erro na notificação do usuário","NO-0001");
+    NO0001("Houve um erro na notificação do usuário","NO-0001"),
+    ATH0001("Houve um erro na autenticação","ATH-0001");
 
     private String message;
     private String code;
