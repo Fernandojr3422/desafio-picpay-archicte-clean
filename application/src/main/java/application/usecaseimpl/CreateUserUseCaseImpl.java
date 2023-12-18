@@ -5,6 +5,7 @@ import core.domain.TransactionPin;
 import core.domain.User;
 import core.domain.Wallet;
 import core.exception.EmailException;
+import core.exception.InternalServerErrorException;
 import core.exception.TaxNumberException;
 import core.exception.TransactionPinException;
 import core.exception.enums.ErrorCodeEnum;
@@ -28,26 +29,21 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
     //da camada de application do subPacote gateway
     private CreateUserGateway createUserGateway;
 
-    private CreateWalletUseCase createWalletUseCase;
-    private CreateTransactionPinUseCase createTransactionPinUseCase;
 
     public CreateUserUseCaseImpl(TaxNumberAvailableUseCase taxNumberAvailableUseCase,
                                  EmailAvailableUseCase emailAvailableUseCase,
-                                 CreateUserGateway createUserGateway,
-                                 CreateWalletUseCase createWalletUseCase,
-                                 CreateTransactionPinUseCase createTransactionPinUseCase) {
+                                 CreateUserGateway createUserGateway) {
         this.taxNumberAvailableUseCase = taxNumberAvailableUseCase;
         this.emailAvailableUseCase = emailAvailableUseCase;
         this.createUserGateway = createUserGateway;
-        this.createWalletUseCase = createWalletUseCase;
-        this.createTransactionPinUseCase = createTransactionPinUseCase;
     }
 
     /* 1)método de caso de uso de implementação da criação do usuário, criação da carteira do usuário,
      * criação do pin de transação
     **/
     @Override
-    public void create(User user, String pin) throws TaxNumberException, EmailException, TransactionPinException {
+    public void create(User user, String pin) throws TaxNumberException, EmailException, TransactionPinException,
+            InternalServerErrorException {
         //uma regra de negocio do desafio, de verificação de cpf,cnpj,email se estão disponíveis
         //vamos verificar se esta disponivel ou não o cpf, cnpj
         if(!taxNumberAvailableUseCase.taxNumberAvailableNumber(user.getTaxNumber().getValue())){
@@ -58,14 +54,15 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
             throw new EmailException(ErrorCodeEnum.ON0003.getMessage(), ErrorCodeEnum.ON0003.getCode());
         }
 
-        //criação do usuário
-        var userSaved = createUserGateway.create(user);
+        //criação do usuário, INserir aqui para não da erro e o usuário ficar sem carteira ou sem pin de
+        //transação.
+        //cria um usuario,cria a carteira, e transação pin
 
-        //criação da carteira
-        createWalletUseCase.create(new Wallet(BigDecimal.ZERO,userSaved));
-
-        //criação do pin de transação
-        createTransactionPinUseCase.create(new TransactionPin(userSaved, pin));
+        if (!createUserGateway.create(user, new Wallet(BigDecimal.ZERO,user),
+                new TransactionPin(user, pin))){
+            throw new InternalServerErrorException(ErrorCodeEnum.ON0004.getMessage(),
+                    ErrorCodeEnum.ON0004.getCode());
+        }
 
 
 
