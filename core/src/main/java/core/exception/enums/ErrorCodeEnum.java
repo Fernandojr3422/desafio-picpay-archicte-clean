@@ -5,6 +5,8 @@ package core.exception.enums;
 public enum ErrorCodeEnum {
 
     ON0001("Tax Number inválido", "ON-0001"),
+    ON0002("Tax Number indisponível", "ON-0002"),
+    ON0003("Email indisponível", "ON-0003"),
     TR0001("Usuário lojista não tem a função de transferência disponível", "TR-0001"),
     TR0002("Saldo Indisponível", "TR-0002"),
     TRP0001("PIN inválido", "TRP-0001");

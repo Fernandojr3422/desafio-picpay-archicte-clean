@@ -29,11 +29,11 @@ public class TransactionPin {
         this.updateAt = updateAt;
     }
 
-    public TransactionPin(User user, String pin, Integer attempt, Boolean blocked) {
-        this.user = user;
+    public TransactionPin(User user, String pin) throws TransactionPinException {
+        setPin(pin);
         this.pin = pin;
-        this.attempt = attempt;
-        this.blocked = blocked;
+        this.attempt = 3; //regra de negocio
+        this.blocked = false; //regra de negocio
         this.createdAt = LocalDateTime.now();
     }
 
