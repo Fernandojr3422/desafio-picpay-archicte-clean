@@ -14,7 +14,8 @@ public enum ErrorCodeEnum {
     TR0002("Saldo Indisponível", "TR-0002"),
     TR0003("Houve um erro ao realizar a transferencia", "TR-0003"),
     TRP0001("PIN inválido", "TRP-0001"),
-    WA0001("Carteira não encontrada", "WA-0001");
+    WA0001("Carteira não encontrada", "WA-0001"),
+    NO0001("Houve um erro na notificação do usuário","NO-0001");
 
     private String message;
     private String code;
